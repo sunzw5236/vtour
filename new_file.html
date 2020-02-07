@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {padding: 0; margin: 0}
+        body{
+            font-size: 12px;
+        }
+        #app{
+            width: 19.2rem;
+            height: 10.8rem;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -9.6rem;
+            margin-top: -5.4rem;
+     
+        }
+    </style>
+</head>
+<body style="background:black;">
+    <div id="app"></div>
+</body>
+<script>
+    function setHtmlFontSize() {
+        var w = document.body.getBoundingClientRect().width||document.documentElement.getBoundingClientRect().width;
+        var fontSize = ''
+        fontSize = w/1920*100
+        document.getElementsByTagName('html')[0].style.fontSize = fontSize+'px';
+    }
+    setHtmlFontSize()
+    window.onresize=function(){
+        setHtmlFontSize()
+    }
+    // document.getElementById('app').style.cursor="url('static/assets/images/default.png'),auto";
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
+<script src="./pixi-spine.js"></script>
+<script src="../pixi/pixi-sound.js"></script>
+<script>
+ 
+ 
+//设置别名
+var Application = PIXI.Application;
+var loader = PIXI.loader;
+var Sprite = PIXI.Sprite;
+var resources = PIXI.loader.resources;
+var Container = PIXI.Container;
+var Graphics = PIXI.Graphics;
+ 
+//实例化PIXI，并设置画布
+var app = new Application({
+    width:1920,
+    height:1080,
+    antialias:true,
+    transparent:false,
+    resolution:1,
+    autoResize:true
+})
+ 
+//设置画布的rem，自适应画布
+app.view.style.width = '19.2rem';
+app.view.style.height = '10.8rem';
+ 
+window.stage = app.stage;
+// 设置画布全屏展示
+// app.renderer.view.style.position = "absolute";
+// app.renderer.view.style.display = "block";
+// app.renderer.autoResize = true;
+// app.renderer.resize(window.innerWidth,window.innerWidth/1920*1080)
+// app.renderer.resize.width=window.innerWidth;
+ 
+document.getElementById('app').appendChild(app.view);
+ 
+//添加纹理，promise保证json文件load结束，然后执行下面的其他渲染及动画逻辑
+new Promise((resolve, reject) => {
+            loader.add('question','static/content.json');
+            loader.add('resources','static/resource.json');
+            loader.load(() => {
+                let content = resources["resources"].data;
+                // console.log(content)
+                // console.log(content)
+                content.forEach(value => {
+                    // console.log(value.key, value.path)
+                    //添加其他资源
+                    loader.add(value.key, value.path);
+                 
+                    // //监听image/audio
+                    if(value.key.indexOf('image')>-1){
+                        var newImg = new Image();
+                        newImg.src = value.path;
+                        newImg.onerror = function(e){
+                            console.log(e);
+                        }
+                    }else if(value.key.indexOf('audio')>-1){
+                        var newAudio = new Audio();
+                        newAudio.src = value.path;
+                        newAudio.onerror = function(e){
+                            console.log(e)
+                        }
+                    }
+                 
+                });
+                loader.load((l,r) =>{
+                    // // window.res = r;
+                    // console.log(l,r)
+                    resolve(r)
+                });
+                loader.onError.add((e) => {
+                    console.log("loader加载错误");
+                });
+                loader.onProgress.add((e) => {
+                    // console.log("loader加载进程中");
+                    // document.getElementsByClassName('runner')[0].style.width = e.progress*6.8/100+'rem'
+                });
+                loader.onComplete.add((e) => {
+                    // console.log("loader加载完成");
+                });
+ 
+            })
+        })
+        .then(()=>{
+            // console.log(res)
+            setup(resources)
+        })
+ 
+//加载的资源
+function setup(res) {
+     
+    var gameScene;
+    window.res=res
+    window.question = res.question.data;
+ 
+     /**
+     * 添加声音
+    */
+    var bgSound = res.audio_Bg.sound
+    var rightSound = res.audio_right.sound
+    var wrongSound = res.audio_wrong.sound
+    var finishSound = res.audio_finish.sound
+    // bgSound.play()
+ 
+    // 全部页面容器
+    var allPage = new Container();
+    app.stage.addChild(allPage)
+ 
+    //开始
+    var startPage = new Container();
+    allPage.addChild(startPage)
+    //背景
+    var startBg = new Sprite.fromImage(res.image_startBg.url);
+    startPage.addChild(startBg);
+ 
+    // btn按钮
+    var startBtnAnimationUI = new PIXI.spine.Spine(res.animation_btn.spineData)
+    var startBtnAnimation = startBtnAnimationUI.state.setAnimation(0,'animation',true)
+    startBtnAnimationUI.x=960;
+    startBtnAnimationUI.y=843;
+    startBtnAnimationUI.cursor = 'pointer'
+    startBtnAnimationUI.interactive = true;
+    startBtnAnimationUI.on('pointerdown',function(){
+        // console.log(1)
+        startPage.visible = false;
+        gameScene.visible = true;
+        bgSound.play()
+        bgSound.loop = true;
+    })
+    startPage.addChild(startBtnAnimationUI)
+     
+     
+    //游戏页面
+    gameScene = new Container();
+    gameScene.visible = false;
+    allPage.addChild(gameScene);
+ 
+    //背景
+    var bgImage = new Container();
+    var gameBg = res.question.data.sources[0].bgImage
+    var gameBgRes = res[gameBg.image.name].url;
+    var gameBg = new Sprite.fromImage(gameBgRes);
+    bgImage.addChild(gameBg);
+    gameScene.addChild(gameBg);
+ 
+    //母鸡
+    var hen = new Container()
+    var exNoAnimationCon = new PIXI.spine.Spine(res.animation_animates.spineData);
+    let exNoAnimation = exNoAnimationCon.state.setAnimation(0, 'wait', true);
+    exNoAnimationCon.x = 960;
+    exNoAnimationCon.y = 543;
+    hen.addChild(exNoAnimationCon);
+    gameScene.addChild(hen);
+ 
+    //鸡蛋
+    var eggs = new Container();
+    gameScene.addChild(eggs);
+ 
+    //结果页
+    var result = new Container();
+    gameScene.addChild(result);
+    var resultBg = new Sprite.fromImage(res.image_resultAn.url);
+    //设置背景色
+    let rectangle = new Graphics();
+    rectangle.alpha = 0.5
+    rectangle.beginFill(0x1b1919);
+    rectangle.drawRect(0, 0, 1920, 1080);
+    rectangle.endFill();
+    rectangle.x = 0;
+    rectangle.y = 0;
+    let style = new PIXI.TextStyle({
+        fontFamily: "Arial",
+        fontSize: 80,
+        fill: "white",
+        stroke: 'yellow',
+        strokeThickness: 4,
+        dropShadow: true,
+        dropShadowColor: "#000000",
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
+    });
+    //设置文字
+    var resultText = new PIXI.Text('2',style)
+    resultText.position.set(1000,620)
+ 
+    var resultTextOver = new PIXI.Text('Game over！',style)
+    resultTextOver.position.set(750,900)
+ 
+    result.addChild(rectangle);
+    result.addChild(resultBg);
+    result.addChild(resultText);
+    result.addChild(resultTextOver);
+    result.visible = false;
+ 
+    // 引入的数据
+     
+    var eggEvent = []
+    var answers=['A','B','C','D']
+    for(let j=0;j<question.sources[0].answer.flags.length;j++){
+        let  egg = new Sprite.fromImage(res[question.sources[0].answer.flags[j].image_name].url);
+        //坐标位置
+        egg.x = question.sources[0].answer.flags[j].x;
+        egg.y = question.sources[0].answer.flags[j].y;
+ 
+        egg.startX = question.sources[0].answer.flags[j].x;
+        egg.startY = question.sources[0].answer.flags[j].y;
+        egg.answer = answers[j]
+        // console.log(question.sources[0].answer.flags[j].x)
+        //设置锚点位置为中心
+        egg.anchor.set(0.5);
+        eggEvent.push(egg);
+        //这个循环不行
+        // egg.interactive = true;
+        // 设置鸡蛋的抓取
+        // egg.on('pointerdown',eggPointerDown)
+        // egg.on('pointermove',eggPointerMove)
+        // egg.on('pointerup',eggPointerUp)
+        // egg.on('pointerupoutsize',pointerUpOutsize)
+        eggs.addChild(egg);
+         
+    }
+ 
+    /**
+     * 测试得出map forEach 可以添加方法  for循环不可以
+    */
+    eggEvent.map(function(value,index){
+        value.interactive=true;
+        value.on('pointerdown',eggPointerDown)
+        value.on('pointermove',eggPointerMove)
+        value.on('pointerup',eggPointerUp)
+        value.on('pointerupoutsize',pointerUpOutsize)
+        /**
+         *
+        */
+       var appDomStyle = document.getElementById('app').style
+        var flag=false;
+        function eggPointerDown(ev){
+            flag = true;
+            var pointerPosition = ev.data.getLocalPosition(this.parent)
+            //鼠标位置与egg锚点的距离
+            this.posX = pointerPosition.x-this.x
+            this.posY = pointerPosition.y-this.y
+            // console.log(this.posX,this.posY)
+            appDomStyle.cursor = "url('static/assets/images/drag.png'),auto";
+        }
+        function eggPointerUp(ev){
+            flag = false;
+            appDomStyle.cursor = "url('static/assets/images/default.png'),auto";
+            // console.log(exNoAnimationCon.x)
+            // console.log(this.x)
+            // console.log(exNoAnimationCon.width/2)
+            console.log(this.answer)
+            if(Math.abs(exNoAnimationCon.x-this.x ) <= exNoAnimationCon.width/2 && Math.abs(exNoAnimationCon.y-this.y )<= exNoAnimationCon.height/2){
+                // alert(1)
+                if(this.answer==="A") {
+                    rightSound.play()
+                    exNoAnimationCon.state.setAnimation(0, 'right', true);
+                    //禁止交互行为
+                    eggs.children.forEach((item,index)=>{
+                            item.buttonMode = false;
+                            item.interactive = false;
+     
+                    });
+                    this.visible=false;
+                    finishSound.play()
+                    // bgSound.paused = true
+                    exNoAnimationCon.state.addAnimation(0, 'finish', false);
+                     
+                    setTimeout(()=>{
+                        bgSound.stop()
+                        result.visible = true;
+                    },6500)
+ 
+                } else {
+                    wrongSound.play()
+                    exNoAnimationCon.state.setAnimation(0, 'wrong', false);
+                    exNoAnimationCon.state.addAnimation(0, 'wait', true);
+                    this.position.x = this.startX
+                    this.position.y = this.startY
+                }
+            } else {
+                exNoAnimationCon.state.setAnimation(0, 'wait', true);
+                this.position.x = this.startX
+                this.position.y = this.startY
+            }    
+        }
+        function pointerUpOutsize(ev){
+            flag = false;
+            appDomStyle.cursor = "url('static/assets/images/default.png'),auto";
+        }
+        function eggPointerMove(ev){
+            var pointerPosition = ev.data.getLocalPosition(this.parent)
+            // console.log(pointerPosition)
+            // console.log(flag)
+            if(flag) {
+                appDomStyle.cursor="url('static/assets/images/drag.png'),auto";               
+                this.position.x = pointerPosition.x - this.posX;
+                this.position.y = pointerPosition.y - this.posY; 
+                if(Math.abs(exNoAnimationCon.x-this.x ) <= exNoAnimationCon.width/2 && Math.abs(exNoAnimationCon.y-this.y )<= exNoAnimationCon.height/2){
+                // alert(1)
+                    exNoAnimationCon.state.setAnimation(0, 'drag', true);
+                }else{
+                    exNoAnimationCon.state.setAnimation(0, 'wait', true);
+                }             
+            }
+        }
+    })
+ 
+ 
+ 
+}
+ 
+ 
+ 
+ 
+ 
+</script>
+</html>

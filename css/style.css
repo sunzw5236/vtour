@@ -1,0 +1,82 @@
+.detailsTap {
+	position: absolute;
+	width: 50%;
+	background: rgba(0,0,0,.8);
+	top: 0;
+	height: 700px;
+	padding: 0px 7%;
+	box-sizing: border-box;
+	display: none;
+	z-index: 1;
+	overflow: hidden;
+}
+.isMap{
+	position: absolute;
+	width: 50%;
+	background: rgba(0,0,0,.8);
+	top: 0;
+	height: 700px;
+	padding: 0px 7%;
+	box-sizing: border-box;
+	z-index: 1;
+	overflow: hidden;
+	display: none;
+	text-align: center;
+	vertical-align: middle;
+}
+#allmap{
+	display: inline-block;
+	width: 100%;
+	}
+
+.close{
+	position: absolute;
+	right: 0;
+    width: 25px;
+    cursor: pointer;
+	transition: .3s;
+}
+.content{
+	
+}
+.close:hover{
+	width: 30px;
+}
+.img-content{
+	overflow: hidden;
+}
+	
+.text-content{
+	line-height: 30px;
+	margin: 25px 0px;
+	height: 18em;
+	padding-bottom: 30px;
+    box-sizing: border-box;
+	font-size: 13px;
+	}
+	
+	
+	.map{
+		
+	}
+	.phone{
+	}
+	
+	#hotvideo {
+		position: absolute;
+		width: 50%;
+		background: rgba(0,0,0,.8);
+		top: 0;
+		height: 700px;
+		padding: 0px 7%;
+		box-sizing: border-box;
+		z-index: 1;
+		overflow: hidden;
+		display: none;
+	}
+	
+	.video_img{
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	

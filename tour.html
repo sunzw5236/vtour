@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>北京科学中心全景</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	<style>
+		@-ms-viewport { width:device-width; }
+		@media only screen and (min-device-width:800px) { html { overflow:hidden; } }
+		html { height:100%; }
+		body { height:100%; overflow:hidden; margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
+	</style>
+	<link rel="stylesheet" type="text/css" href="css/animate.min.css"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="font/font-awesome.min.css"/>
+</head>
+<body>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=hp0TFFg1SunsZLQWRDkGLYof1PkTfcbz"></script>
+<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="tour.js"></script>
+<script src="js/myTour.js" type="text/javascript" charset="utf-8"></script>
+  <!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> -->
+<div id="pano" style="width:100%;height:100%;">
+	<noscript><table style="width:100%;height:100%;"><tr style="vertical-align:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
+	<script>
+			embedpano({swf:"tour.swf", xml:"tour.xml", target:"pano", html5:"auto", mobilescale:1.0, passQueryParameters:true});
+	</script>
+</div>
+<div style="text-align: justify;">
+<div class='animated  detailsTap' id='msgTap'>
+	<img src="img/close.jpg" class="close" onclick="closeTap('msgTap')">
+	<h1 style="text-align: center;margin-top: 8%;margin-bottom: 8%;">益思文化</h1>
+	<div class="content">
+		<div class="img-content">
+		</div>
+		<div class="text-content">
+			EASCO创设于2014年，是一家致力于新媒体全产业链运营、创意营销及广告、会展、活动策划执行的专业机构。多年来充分聚合运营资源和从业经验，已为超过100家客户提供精准有效的自媒体、户外媒体传播及全案策划、线下会务、活动承办等一站式整合营销服务。服务客户包括：BMW、奥迪、中国人寿、一汽大众、上海大众、天猫等国内外知名企业。
+		</div>
+	</div>
+</div>	
+</div>	
+<img  style="position: absolute;top: 12%;left: 20%;display: none;" class="animated sharekjg share_1" src="img/share_img.jpg" width="60%">
+<img style="position: absolute;top: 4%;left: 75%;display: none;" class="animated sharekjg share_2"  src="img/sharebablu.png" width="25%">
+<!-- 图片地图 -->
+<!-- <div class='animated isMap' id='mapcontent'>
+	<img src="img/close.jpg" class="close"  onclick="closeTap('mapcontent')">
+	<h1 style="text-align: center;margin-top: 25px;" >地图导航</h1>
+	<div id="allmap" style="overflow: scroll;">
+		<img width="100%" src="img/kexuemap3.jpg" alt="">
+	</div>
+</div> -->
+<div class='animated isMap' id='mapcontent'>
+	<img src="img/close.jpg" class="close"  onclick="closeTap('mapcontent')">
+	<h1 style="text-align: center;margin-top: 8%;margin-bottom: 8%;">地图导航</h1>
+	<div id="allmap" >
+	</div>
+</div>
+<!-- <div id="container" style="width:480px; height:320px; background:#000; overflow:hidden;position: absolute;top: 0;display: none;"></div>
+<button onClick="play2VR.init(document.querySelector('#container'), '12870150455d030516d844a')" style="position: absolute;right: 100px;top: 0px;z-index: 9999;">播放媒体</button>
+<button onClick="play2VR.dispose()" style="position: absolute;right: 0;top: 0px;">取消播放</button>
+<script src="//v2.play2vr.com/js/play2VR.js"></script> -->
+<!-- <audio id="audio" src="sond/love.mp3" autoplay="autoplay" loop='loop'></audio> -->
+<!-- <div>
+<div    url="./img/360xiu.net.png" keep="true" align="leftbottom" x="80" y="25"  scale="0.4" 
+crop="400|0|100|100"
+onclick=""
+></div>
+<div    url="./img/360xiu.net.png" keep="true" align="leftbottom" x="80" y="25"  scale="0.4" 
+crop="400|0|100|100"
+onclick=""
+> 	</div>
+<layer name="phone"  url="./img/360xiu.net.png" keep="true" align="leftbottom" x="140" y="25"  scale="0.4"
+crop="500|0|100|100"
+onclick="js($('#phone').click())"
+/>
+</div> -->
+<div class='animated ' id='hotvideo'>
+	<img src="img/close.jpg" class="close" onclick="closeTap('hotvideo','video')">
+	<h1 style="text-align: center;margin-top: 8%;margin-bottom: 8%;">视频</h1>
+	<div class="content">
+		<div id='video_img' class='video_img'>
+			<video width="100%" src="video/video1.mp4" id="myselfvideo" controls="controls">
+				您的浏览器不支持 video 标签。</video>
+		</div>
+		<div class="text-content">
+			EASCO创设于2014年，是一家致力于新媒体全产业链运营、创意营销及广告、会展、活动策划执行的专业机构。多年来充分聚合运营资源和从业经验，已为超过100家客户提供精准有效的自媒体、户外媒体传播及全案策划、线下会务、活动承办等一站式整合营销服务。服务客户包括：BMW、奥迪、中国人寿、一汽大众、上海大众、天猫等国内外知名企业。
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<script src="https://res2.wx.qq.com/open/js/jweixin-1.4.0.js " type="text/javascript" charset="utf-8"></script>
+<script src="./jswx.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+function addMap(){
+		// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	// var point = new BMap.Point(116.469, 39.8861);//easco公司定位
+	var point = new BMap.Point(116.399, 39.977);//北京科技中心定位
+	map.centerAndZoom(point, 15);
+	var marker = new BMap.Marker(point);  // 创建标注
+	map.panBy($("#allmap").css('width'), $("#allmap").css('height'));
+	map.addOverlay(marker);               // 将标注添加到地图中
+	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+	
+	var opts = {
+	  position : point,    // 指定文本标注所在的地理位置
+	  offset   : new BMap.Size(-120, -90)    //设置文本偏移量
+	}
+	// 北京益思文化传媒-传奇星广场C05 
+	var label = new BMap.Label("中国北京市西城区北辰路9号院（北京科技中心）", opts);  // 创建文本标注对象
+		label.setStyle({
+			 color : "white",
+			 fontSize : "12px",
+			 border:"none",
+			 height : "20px",
+			 lineHeight : "20px",
+			 padding:"10px",
+			 background:"#11120F",
+			 borderRadius:"4px"
+			});
+			map.addOverlay(label)
+}
+</script>
+

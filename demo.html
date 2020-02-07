@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		11
+		<img src="img/hotpostimg/hot1.jpg" >
+	</body>
+</html>
+<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://res2.wx.qq.com/open/js/jweixin-1.4.0.js " type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var data;
+	window.shareData={
+	 	imgUrl:"https://yun.neweasco.com/easco/vtour/img/hotpostimg/hot1.jpg",
+	 	title:"222",
+	 	content:"111",
+	};
+	// $.ajax({
+	//           url: "https://yun.neweasco.com/jssdk.php?callback",
+	//           dataType: "json",
+	//           async: false,
+	//           type: "GET",
+	//       beforeSend: function() {
+	// 		  
+	//         },
+	//       success: function(req) {
+	// }
+	// });
+	
+	 // var url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxe08f06eed88a45d4&secret=b05776d45acd6e9234f517dda2c698d3";
+
+	
+
+	// $.get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxe08f06eed88a45d4&secret=b05776d45acd6e9234f517dda2c698d3?callback=?',function(req){
+	// 	console.log(req)
+	// },'jsonp');
+	// 
+	// alert(location.href.split('#')[0])
+$.get('https://yun.neweasco.com/jssdk.php?callback=?&url='+location.href.split('#')[0],function(req){
+	console.log(req)
+	console.log(wx)
+	 data=req;      
+		
+	  wx.config({
+				debug:  false,
+				appId: "wxe08f06eed88a45d4",
+				timestamp: data.timestamp,
+				nonceStr: data.nonceStr ,
+				signature:data.signature,
+				jsApiList:["onMenuShareAppMessage","translateVoice"]
+	      }); 
+		wx.ready(function(){
+			
+			alert("isOK")
+		   wx.onMenuShareAppMessage({
+			  dataUrl: "",
+			  type: "link",
+				  title: window.shareData.title, 
+				  desc: window.shareData.content, 
+				  link:location.href.split('#')[0], 
+				  imgUrl:window.shareData.imgUrl ,
+			  success: function (res,any) {
+				  alert("OK")
+
+				  // alert(2)
+			  },
+			  cancel: function (res, any) {
+				  alert("NO")
+
+				  /// alert(3)
+			  }
+			});
+		});
+},'jsonp');
+	
+/* 
+
+var data;
+window.shareData={
+ 	imgUrl:"https://yun.neweasco.com/easco/vtour/img/hotpostimg/hot1.jpg",
+ 	title:"222",
+ 	content:"111",
+};
+$.ajax({
+          url: "https://yun.neweasco.com/jssdk.php",
+          dataType: "json",
+          async: true,
+          type: "GET",
+      beforeSend: function() {
+        },
+      success: function(req) {
+		  console.log(req)
+       data=req;         
+        wx.config({
+             debug:  true,
+             appId: data.appId,
+			timestamp: data.timestamp,
+			nonceStr: data.nonceStr ,
+			signature:data.signature,
+			jsApiList:["onMenuShareAppMessage"]
+            }); 
+			wx.ready(function(){
+				alert(1)
+			   wx.onMenuShareAppMessage({
+			      dataUrl: "",
+			      type: "link",
+				      title: window.shareData.title, 
+				      desc: window.shareData.content, 
+				      link:"", 
+				      imgUrl:window.shareData.imgUrl ,
+			      success: function (res,any) {
+					  // alert(2)
+			      },
+			      cancel: function (res, any) {
+					  /// alert(3)
+			      }
+			    });
+			});
+}
+});
+ 
+ 
+ */
+
+
+</script>
